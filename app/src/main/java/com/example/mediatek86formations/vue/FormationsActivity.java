@@ -2,7 +2,9 @@ package com.example.mediatek86formations.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,8 @@ public class FormationsActivity extends AppCompatActivity {
         controle = Controle.getInstance();
         btnFiltrer = (Button) findViewById(R.id.btnFiltrer);
         txtFiltre = (EditText) findViewById(R.id.txtFiltre);
+        controle.setLesFormations(controle.getLesFormationsCopie());
+        ecouteFiltrer();
         creerListe();
     }
 
@@ -50,6 +54,24 @@ public class FormationsActivity extends AppCompatActivity {
             FormationListAdapter adapter = new FormationListAdapter(lesFormations,FormationsActivity.this);
             listView.setAdapter(adapter);
         }
+    }
+
+    /**
+     * En cas de clic sur le bouton "filtrer", vérifie si la zone de saisie est vide.
+     * Si elle ne l'est pas actualise la liste des formations affichées.
+     */
+    private void ecouteFiltrer() {
+        btnFiltrer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String txt = txtFiltre.getText().toString();
+                if(txt.length() > 0) {
+                    controle.setLesFormations(controle.getLesFormationFiltre(txt));
+                } else {
+                    controle.setLesFormations(controle.getLesFormationsCopie());
+                }
+                creerListe();
+            }
+        });
     }
 
 }
